@@ -1,55 +1,40 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useEffect } from "react";
+
+const isAuth = true
 
 const getData =  () => {
   return axios.get("https://jsonplaceholder.typicode.com/posts");
 };
 
 function App() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isSuccess, isError} = useQuery({
+    // ОПЦИИ ЗАПРОСОВ!!!
     queryKey: ["posts"],
     queryFn: getData,
+    select: data => data.data,
+    enabled:isAuth,
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if(isSuccess) console.log('Data success!')
+  },[isSuccess, data])
 
-  // Проверка на наличие данных
-  if (!data) {
-    return <div>Data not found</div>;
-  }
-
-  // Извлечение различных свойств из объекта ответа
-  const posts = data.data; // Массив постов
-  const status = data.status; // Статус ответа (например, 200)
-  const headers = data.headers; // Заголовки ответа
-  const statusText = data.statusText; // Текст статуса (например, "OK")
-
-  console.log("Status:", status);
-  console.log("Headers:", headers);
-  console.log("Status Text:", statusText);
+  useEffect(()=>{
+    if(isError) console.log('Error data')
+  },[isError])
 
   return (
     <>
       <h1>React Vite Query</h1>
-      {posts.length ? (
-        posts.map((post:any) => <div key={post.id}>{post.title}</div>)
-      ) : (
-        "No posts found"
-      )}
-    </>
-  );
-  /*return (
-    <>
-      <h1>React Vite Query</h1>
       {isLoading
         ? "Loading..."
-        : data?.data?.length
-        ? data.data.map((post: any) => <div key={post.id}>{post.title}</div>)
+        : data?.length
+        ? data.map((post: any) => <div key={post.id}>{post.title}</div>)
         : "Not found"}
     </>
-  );*/
+  );
 }
 
 export default App;
