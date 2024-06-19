@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
-import { usePosts } from "./usePosts";
+import { usePosts } from "./hooks/usePosts";
+import { usePost } from "./hooks/usePostById";
 
 const isAuth = true
 
 function App() {
   
   const {data, isLoading, isSuccess, isError} = usePosts(isAuth)
+  const {post} = usePost(3)
+
+  console.log(post)
 
   return (
     <>

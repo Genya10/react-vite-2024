@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import axios from 'axios'
-import { IPost } from "./types/posts"
+import { IPost } from "../types/posts"
 
 const getData =  () => {
     return axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts");
