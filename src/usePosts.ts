@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import axios from 'axios'
+import { IPost } from "./types/posts"
 
 const getData =  () => {
-    return axios.get("https://jsonplaceholder.typicode.com/posts");
+    return axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts");
   };
 
 export function usePosts(isEnabled: boolean){
@@ -14,6 +15,8 @@ export function usePosts(isEnabled: boolean){
         select: data => data.data,
         enabled:isEnabled
       });
+
+      console.log(data?.[0].body)
     
       useEffect(() => {
         if(isSuccess) console.log('Data success!')
