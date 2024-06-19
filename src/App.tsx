@@ -1,29 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
+import { usePosts } from "./usePosts";
 
 const isAuth = true
 
-const getData =  () => {
-  return axios.get("https://jsonplaceholder.typicode.com/posts");
-};
-
 function App() {
-  const { data, isLoading, isSuccess, isError} = useQuery({
-    // ОПЦИИ ЗАПРОСОВ!!!
-    queryKey: ["posts"],
-    queryFn: getData,
-    select: data => data.data,
-    enabled:isAuth,
-  });
-
-  useEffect(() => {
-    if(isSuccess) console.log('Data success!')
-  },[isSuccess, data])
-
-  useEffect(()=>{
-    if(isError) console.log('Error data')
-  },[isError])
+  
+  const {data, isLoading, isSuccess, isError} = usePosts(isAuth)
 
   return (
     <>
