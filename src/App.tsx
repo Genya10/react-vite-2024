@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery,useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 import { usePosts } from "./hooks/usePosts";
@@ -11,11 +11,18 @@ function App() {
   const {data, isLoading, isSuccess, isError} = usePosts(isAuth)
   const {post} = usePost(3)
 
+  const queryClient = useQueryClient()
+
   console.log(post)
 
   return (
     <>
       <h1>React Vite Query</h1>
+      <button onClick={()=>{
+        queryClient.invalidateQueries({queryKey:['posts']})
+      }}>
+        Invalidate posts
+      </button>
       {isLoading
         ? "Loading..."
         : data?.length
