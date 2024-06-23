@@ -1,4 +1,4 @@
-import { useQuery,useQueryClient,useMutation } from "@tanstack/react-query";
+import { useQuery,useQueryClient,useMutation, useIsFetching, useIsMutating } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 import { usePosts } from "./hooks/usePosts";
@@ -17,6 +17,9 @@ const queryClient = useQueryClient()
           queryClient.invalidateQueries({queryKey:['posts']})
         }
   })
+
+  //const isFetching = useIsFetching()
+  //const isMutating = useIsMutating()
 
   return (
     <>
