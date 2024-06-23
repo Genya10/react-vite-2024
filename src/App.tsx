@@ -1,33 +1,36 @@
-import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { useQuery,useQueryClient,useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 import { usePosts } from "./hooks/usePosts";
 import { usePost } from "./hooks/usePostById";
-
-const isAuth = true
+import { IPost } from "./types/posts";
 
 function App() {
-  
-  const {data, isLoading, isSuccess, isError} = usePosts(isAuth)
-  const {post} = usePost(3)
 
-  const queryClient = useQueryClient()
+const queryClient = useQueryClient()
 
-  console.log(post)
+  const {mutate,isPending} = useMutation({
+    mutationKey:['add post'],
+    mutationFn: async (newPost:Omit<IPost, 'id'> ) => axios.post
+        ('https://jsonplaceholder.typicode.com/posts', newPost),
+        onSuccess:()  => {
+          queryClient.invalidateQueries({queryKey:['posts']})
+        }
+  })
 
   return (
     <>
       <h1>React Vite Query</h1>
       <button onClick={()=>{
-        queryClient.invalidateQueries({queryKey:['posts']})
-      }}>
-        Invalidate posts
+       mutate({
+        body:'New body',
+        userId:1,
+        title:'New title'
+       })
+      }}
+      disabled={isPending}>
+        {isPending ?'Loading...' : 'Create'}
       </button>
-      {isLoading
-        ? "Loading..."
-        : data?.length
-        ? data.map((post: any) => <div key={post.id}>{post.title}</div>)
-        : "Not found"}
     </>
   );
 }
